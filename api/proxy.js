@@ -34,6 +34,8 @@ export default async function handler(req, res) {
     });
 
     const buf = Buffer.from(await r.arrayBuffer());
+    res.setHeader("x-proxy-saw-cookie-length", String((req.headers["cookie"] || "").length));
+    res.setHeader("x-proxy-saw-ua", String(req.headers["user-agent"] || "").slice(0, 60));
     const ct = r.headers.get("content-type");
     if (ct) res.setHeader("content-type", ct);
     res.status(r.status).send(buf);
